@@ -1,11 +1,14 @@
 namespace menuButtons {
     let selected = 0
     let labels: string[] = []
+
     let action1: (() => void) = null
     let action2: (() => void) = null
 
     let menuImage: Image = null
     let menuSprite: Sprite = null
+
+    let active = false
     let started = false
 
     const MenuKind = SpriteKind.create()
@@ -40,22 +43,46 @@ namespace menuButtons {
 
         started = true
 
+        // 上
         controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
+            if (!active) {
+                return
+            }
+
             selected = 0
             drawMenu()
         })
 
+        // 下
         controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
+            if (!active) {
+                return
+            }
+
             selected = 1
             drawMenu()
         })
 
+        // Aボタン
         controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
-            if (selected == 0 && action1) {
-                action1()
+            if (!active) {
+                return
             }
 
-            if (selected == 1 && action2) {
+            // 先にメニューを消す
+            active = false
+
+            if (menuSprite) {
+                menuSprite.destroy()
+                menuSprite = null
+            }
+
+            menuImage = null
+
+            // 選択したボタンの処理
+            if (selected == 0 && action1) {
+                action1()
+            } else if (selected == 1 && action2) {
                 action2()
             }
         })
@@ -67,6 +94,7 @@ namespace menuButtons {
     export function createButtons(label1: string, label2: string) {
         labels = [label1, label2]
         selected = 0
+        active = true
 
         menuImage = image.create(160, 100)
 
