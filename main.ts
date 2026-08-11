@@ -1,20 +1,34 @@
 namespace menuButtons {
     let selected = 0
     let labels: string[] = []
+    let buttons: TextSprite[] = []
     let action1: () => void = null
     let action2: () => void = null
+    let started = false
 
-    function drawMenu() {
-        screen.fill(0)
+    class TextSprite extends sprites.ExtendableSprite {
+        constructor(text: string) {
+            super(image.create(80, 24))
+            this.image.fill(0)
+            this.image.print(text, 5, 6)
+        }
+    }
 
-        for (let i = 0; i < labels.length; i++) {
-            let y = 40 + i * 30
+    function redraw() {
+        for (let i = 0; i < buttons.length; i++) {
+            let img = image.create(80, 24)
+            img.fill(0)
 
             if (i == selected) {
-                screen.print(">", 20, y)
+                img.drawRect(0, 0, 79, 23)
+                img.print(">", 4, 6)
+                img.print(labels[i], 15, 6)
+            } else {
+                img.print(labels[i], 15, 6)
             }
 
-            screen.print(labels[i], 40, y)
+            buttons[i].setImage(img)
+            buttons[i].setPosition(80, 45 + i * 30)
         }
     }
 
@@ -23,25 +37,41 @@ namespace menuButtons {
         labels = [label1, label2]
         selected = 0
 
-        drawMenu()
+        for (let b of buttons) {
+            b.destroy()
+        }
 
-        controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
-            selected = 0
-            drawMenu()
-        })
+        buttons = []
 
-        controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
-            selected = 1
-            drawMenu()
-        })
+        let button1 = new TextSprite(label1)
+        let button2 = new TextSprite(label2)
 
-        controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
-            if (selected == 0 && action1) {
-                action1()
-            } else if (selected == 1 && action2) {
-                action2()
-            }
-        })
+        buttons.push(button1)
+        buttons.push(button2)
+
+        redraw()
+
+        if (!started) {
+            started = true
+
+            controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
+                selected = 0
+                redraw()
+            })
+
+            controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
+                selected = 1
+                redraw()
+            })
+
+            controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
+                if (selected == 0 && action1) {
+                    action1()
+                } else if (selected == 1 && action2) {
+                    action2()
+                }
+            })
+        }
     }
 
     //% block="ボタン1がAで選択されたとき"
