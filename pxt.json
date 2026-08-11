@@ -1,0 +1,12 @@
+{
+    "name": "arcade-menu-buttons",
+    "description": "Two-button menu for MakeCode Arcade",
+    "version": "0.0.1",
+    "dependencies": {
+        "device": "*"
+    },
+    "files": [
+        "main.ts"
+    ],
+    "preferredEditor": "tsprj"
+}
