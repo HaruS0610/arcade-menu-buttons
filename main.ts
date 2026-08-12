@@ -8,14 +8,21 @@ namespace menuButtons {
     let menuImage: Image = null
     let menuSprite: Sprite = null
 
+    // メニューが表示されている間だけ true
     let active = false
-    let started = false
 
-    // 1番・2番のハイスコア更新回数
+    // Aボタンのイベントを1回だけ登録
+    let controlsStarted = false
+
+    // ハイスコア更新回数
     let highScoreCount1 = 0
     let highScoreCount2 = 0
 
     const MenuKind = SpriteKind.create()
+
+    // ==============================
+    // メニューを描画
+    // ==============================
 
     function drawMenu() {
         if (!menuImage) {
@@ -40,12 +47,16 @@ namespace menuButtons {
         }
     }
 
+    // ==============================
+    // コントローラー設定
+    // ==============================
+
     function setupControls() {
-        if (started) {
+        if (controlsStarted) {
             return
         }
 
-        started = true
+        controlsStarted = true
 
         // 上
         controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
@@ -69,13 +80,18 @@ namespace menuButtons {
 
         // Aボタン
         controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
+
+            // メニューがないときは何もしない
             if (!active) {
                 return
             }
 
-            // メニューを消す
+            // =================================
+            // ここで最初にメニューを無効化
+            // =================================
             active = false
 
+            // メニューを消す
             if (menuSprite) {
                 menuSprite.destroy()
                 menuSprite = null
@@ -83,55 +99,80 @@ namespace menuButtons {
 
             menuImage = null
 
+            // =================================
             // 選択したボタンの処理
-            if (selected == 0 && action1) {
-                action1()
-            } else if (selected == 1 && action2) {
-                action2()
+            // =================================
+
+            if (selected == 0) {
+                if (action1) {
+                    action1()
+                }
+            } else {
+                if (action2) {
+                    action2()
+                }
             }
+
+            // ここから先は拡張機能側では
+            // Aボタンを処理しない
         })
     }
 
-    // ========================================
-    // メニュー
-    // ========================================
+    // ==============================
+    // 2つのボタンを作る
+    // ==============================
 
     //% block="2つのボタンを作る %label1 %label2"
     //% label1.defl="1"
     //% label2.defl="2"
     export function createButtons(label1: string, label2: string) {
+
         labels = [label1, label2]
         selected = 0
         active = true
+
+        // 以前のメニューがあれば消す
+        if (menuSprite) {
+            menuSprite.destroy()
+            menuSprite = null
+        }
 
         menuImage = image.create(160, 100)
 
         drawMenu()
 
-        if (menuSprite) {
-            menuSprite.destroy()
-        }
-
         menuSprite = sprites.create(menuImage, MenuKind)
+
+        // 画面中央
         menuSprite.setPosition(80, 60)
+
+        // Bubbleなどより前に表示
         menuSprite.z = 1000
 
         setupControls()
     }
+
+    // ==============================
+    // ボタン1
+    // ==============================
 
     //% block="ボタン1がAで選択されたとき"
     export function button1Selected(action: () => void) {
         action1 = action
     }
 
+    // ==============================
+    // ボタン2
+    // ==============================
+
     //% block="ボタン2がAで選択されたとき"
     export function button2Selected(action: () => void) {
         action2 = action
     }
 
-    // ========================================
+    // ==============================
     // ハイスコアをとった数
-    // ========================================
+    // ==============================
 
     //% block="ハイスコアをとった数 1"
     export function highScoreCountButton1(): number {
@@ -143,9 +184,9 @@ namespace menuButtons {
         return highScoreCount2
     }
 
-    // ========================================
-    // ハイスコア更新回数を増やす
-    // ========================================
+    // ==============================
+    // ハイスコアを1増やす
+    // ==============================
 
     //% block="1番のハイスコアを1増やす"
     export function addHighScoreCount1() {
@@ -157,9 +198,9 @@ namespace menuButtons {
         highScoreCount2 += 1
     }
 
-    // ========================================
-    // ハイスコア更新回数を0にする
-    // ========================================
+    // ==============================
+    // ハイスコアをリセット
+    // ==============================
 
     //% block="1番のハイスコアをとった数を0にする"
     export function resetHighScoreCount1() {
