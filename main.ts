@@ -13,11 +13,23 @@ namespace menuButtons {
     let menuActive = false
     let controlsStarted = false
 
-    // ハイスコア回数
+    // ========================================
+    // ハイスコアをとった数
+    // ========================================
+
     let highScoreCount1 = 0
     let highScoreCount2 = 0
     let highScoreCount3 = 0
     let highScoreCount4 = 0
+
+    // 各ボタンのハイスコア
+    let highScore1 = 0
+    let highScore2 = 0
+    let highScore3 = 0
+    let highScore4 = 0
+
+    // 前回確認したスコア
+    let lastScore = 0
 
     const MenuKind = SpriteKind.create()
 
@@ -71,7 +83,6 @@ namespace menuButtons {
 
         controlsStarted = true
 
-        // 上
         controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
             if (!menuActive) {
                 return
@@ -86,7 +97,6 @@ namespace menuButtons {
             drawMenu()
         })
 
-        // 下
         controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
             if (!menuActive) {
                 return
@@ -101,7 +111,6 @@ namespace menuButtons {
             drawMenu()
         })
 
-        // 左
         controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
             if (!menuActive || buttonCount != 4) {
                 return
@@ -114,7 +123,6 @@ namespace menuButtons {
             drawMenu()
         })
 
-        // 右
         controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
             if (!menuActive || buttonCount != 4) {
                 return
@@ -309,20 +317,50 @@ namespace menuButtons {
     //% block="1番のハイスコアをとった数を0にする"
     export function resetHighScoreCount1() {
         highScoreCount1 = 0
+        highScore1 = 0
     }
 
     //% block="2番のハイスコアをとった数を0にする"
     export function resetHighScoreCount2() {
         highScoreCount2 = 0
+        highScore2 = 0
     }
 
     //% block="3番のハイスコアをとった数を0にする"
     export function resetHighScoreCount3() {
         highScoreCount3 = 0
+        highScore3 = 0
     }
 
     //% block="4番のハイスコアをとった数を0にする"
     export function resetHighScoreCount4() {
         highScoreCount4 = 0
+        highScore4 = 0
     }
+
+    // ========================================
+    // スコアを監視して自動更新
+    // ========================================
+
+    game.onUpdate(function () {
+        let score = info.score()
+
+        if (score > lastScore) {
+            if (selected == 0 && score > highScore1) {
+                highScore1 = score
+                highScoreCount1 += 1
+            } else if (selected == 1 && score > highScore2) {
+                highScore2 = score
+                highScoreCount2 += 1
+            } else if (selected == 2 && score > highScore3) {
+                highScore3 = score
+                highScoreCount3 += 1
+            } else if (selected == 3 && score > highScore4) {
+                highScore4 = score
+                highScoreCount4 += 1
+            }
+
+            lastScore = score
+        }
+    })
 }
