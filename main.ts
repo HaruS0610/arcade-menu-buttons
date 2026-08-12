@@ -14,10 +14,20 @@ namespace menuButtons {
     let menuActive = false
     let controlsStarted = false
 
+    // ========================================
+    // ハイスコアをとった数
+    // ========================================
+
     let highScoreCount1 = 0
     let highScoreCount2 = 0
+    let highScoreCount3 = 0
+    let highScoreCount4 = 0
 
     const MenuKind = SpriteKind.create()
+
+    // ========================================
+    // メニューを描画
+    // ========================================
 
     function drawMenu() {
         if (!menuImage) {
@@ -27,7 +37,10 @@ namespace menuButtons {
         menuImage.fill(0)
 
         if (buttonCount == 2) {
-            // 2ボタン
+            // ----------------------------
+            // 2つのボタン
+            // ----------------------------
+
             for (let i = 0; i < 2; i++) {
                 let y = 25 + i * 35
 
@@ -40,7 +53,10 @@ namespace menuButtons {
                 menuImage.print(labels[i], 50, y + 8, 1)
             }
         } else {
-            // 4ボタン
+            // ----------------------------
+            // 4つのボタン
+            // ----------------------------
+
             for (let i = 0; i < 4; i++) {
                 let x = 10 + (i % 2) * 80
                 let y = 20 + Math.floor(i / 2) * 40
@@ -56,6 +72,10 @@ namespace menuButtons {
         }
     }
 
+    // ========================================
+    // コントローラー
+    // ========================================
+
     function setupControls() {
         if (controlsStarted) {
             return
@@ -63,7 +83,10 @@ namespace menuButtons {
 
         controlsStarted = true
 
+        // ----------------------------
         // 上
+        // ----------------------------
+
         controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
             if (!menuActive) {
                 return
@@ -80,7 +103,10 @@ namespace menuButtons {
             drawMenu()
         })
 
+        // ----------------------------
         // 下
+        // ----------------------------
+
         controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
             if (!menuActive) {
                 return
@@ -97,7 +123,10 @@ namespace menuButtons {
             drawMenu()
         })
 
+        // ----------------------------
         // 左
+        // ----------------------------
+
         controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
             if (!menuActive || buttonCount != 4) {
                 return
@@ -110,7 +139,10 @@ namespace menuButtons {
             drawMenu()
         })
 
+        // ----------------------------
         // 右
+        // ----------------------------
+
         controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
             if (!menuActive || buttonCount != 4) {
                 return
@@ -123,14 +155,19 @@ namespace menuButtons {
             drawMenu()
         })
 
+        // ========================================
         // Bで決定
+        // ========================================
+
         controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
             if (!menuActive) {
                 return
             }
 
+            // メニューを無効化
             menuActive = false
 
+            // メニューを消す
             if (menuSprite) {
                 menuSprite.destroy()
                 menuSprite = null
@@ -138,6 +175,7 @@ namespace menuButtons {
 
             menuImage = null
 
+            // 選択したボタンの処理
             if (selected == 0 && action1) {
                 action1()
             } else if (selected == 1 && action2) {
@@ -151,13 +189,16 @@ namespace menuButtons {
     }
 
     // ========================================
-    // 2つのボタン
+    // 2つのボタンを作る
     // ========================================
 
     //% block="2つのボタンを作る %label1 %label2"
     //% label1.defl="1"
     //% label2.defl="2"
-    export function createTwoButtons(label1: string, label2: string) {
+    export function createTwoButtons(
+        label1: string,
+        label2: string
+    ) {
         labels = [label1, label2]
         buttonCount = 2
         selected = 0
@@ -180,7 +221,7 @@ namespace menuButtons {
     }
 
     // ========================================
-    // 4つのボタン
+    // 4つのボタンを作る
     // ========================================
 
     //% block="4つのボタンを作る %label1 %label2 %label3 %label4"
@@ -265,7 +306,7 @@ namespace menuButtons {
     }
 
     // ========================================
-    // メニューが表示中か
+    // メニューが表示中
     // ========================================
 
     //% block="メニューが表示中"
@@ -274,7 +315,7 @@ namespace menuButtons {
     }
 
     // ========================================
-    // ハイスコアをとった数
+    // ハイスコアをとった数 1～4
     // ========================================
 
     //% block="ハイスコアをとった数 1"
@@ -287,8 +328,18 @@ namespace menuButtons {
         return highScoreCount2
     }
 
+    //% block="ハイスコアをとった数 3"
+    export function highScoreCountButton3(): number {
+        return highScoreCount3
+    }
+
+    //% block="ハイスコアをとった数 4"
+    export function highScoreCountButton4(): number {
+        return highScoreCount4
+    }
+
     // ========================================
-    // ハイスコアを1増やす
+    // ハイスコアを1増やす 1～4
     // ========================================
 
     //% block="1番のハイスコアを1増やす"
@@ -301,8 +352,18 @@ namespace menuButtons {
         highScoreCount2 += 1
     }
 
+    //% block="3番のハイスコアを1増やす"
+    export function addHighScoreCount3() {
+        highScoreCount3 += 1
+    }
+
+    //% block="4番のハイスコアを1増やす"
+    export function addHighScoreCount4() {
+        highScoreCount4 += 1
+    }
+
     // ========================================
-    // ハイスコア回数を0にする
+    // ハイスコアをとった数を0にする 1～4
     // ========================================
 
     //% block="1番のハイスコアをとった数を0にする"
@@ -313,5 +374,15 @@ namespace menuButtons {
     //% block="2番のハイスコアをとった数を0にする"
     export function resetHighScoreCount2() {
         highScoreCount2 = 0
+    }
+
+    //% block="3番のハイスコアをとった数を0にする"
+    export function resetHighScoreCount3() {
+        highScoreCount3 = 0
+    }
+
+    //% block="4番のハイスコアをとった数を0にする"
+    export function resetHighScoreCount4() {
+        highScoreCount4 = 0
     }
 }
