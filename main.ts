@@ -303,30 +303,6 @@ namespace menuButtons {
     }
 
     // ========================================
-    // ハイスコアを1増やす 1～4
-    // ========================================
-
-    //% block="1番のハイスコアを1増やす"
-    export function addHighScoreCount1() {
-        highScoreCount1 += 1
-    }
-
-    //% block="2番のハイスコアを1増やす"
-    export function addHighScoreCount2() {
-        highScoreCount2 += 1
-    }
-
-    //% block="3番のハイスコアを1増やす"
-    export function addHighScoreCount3() {
-        highScoreCount3 += 1
-    }
-
-    //% block="4番のハイスコアを1増やす"
-    export function addHighScoreCount4() {
-        highScoreCount4 += 1
-    }
-
-    // ========================================
     // ハイスコアを0にする 1～4
     // ========================================
 
