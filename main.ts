@@ -10,14 +10,10 @@ namespace menuButtons {
 
     let menuImage: Image = null
     let menuSprite: Sprite = null
-
     let menuActive = false
     let controlsStarted = false
 
-    // ========================================
-    // ハイスコアをとった数
-    // ========================================
-
+    // ハイスコア回数
     let highScoreCount1 = 0
     let highScoreCount2 = 0
     let highScoreCount3 = 0
@@ -26,7 +22,7 @@ namespace menuButtons {
     const MenuKind = SpriteKind.create()
 
     // ========================================
-    // メニューを描画
+    // メニュー描画
     // ========================================
 
     function drawMenu() {
@@ -37,10 +33,6 @@ namespace menuButtons {
         menuImage.fill(0)
 
         if (buttonCount == 2) {
-            // ----------------------------
-            // 2つのボタン
-            // ----------------------------
-
             for (let i = 0; i < 2; i++) {
                 let y = 25 + i * 35
 
@@ -53,10 +45,6 @@ namespace menuButtons {
                 menuImage.print(labels[i], 50, y + 8, 1)
             }
         } else {
-            // ----------------------------
-            // 4つのボタン
-            // ----------------------------
-
             for (let i = 0; i < 4; i++) {
                 let x = 10 + (i % 2) * 80
                 let y = 20 + Math.floor(i / 2) * 40
@@ -83,10 +71,7 @@ namespace menuButtons {
 
         controlsStarted = true
 
-        // ----------------------------
         // 上
-        // ----------------------------
-
         controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
             if (!menuActive) {
                 return
@@ -94,19 +79,14 @@ namespace menuButtons {
 
             if (buttonCount == 2) {
                 selected = 0
-            } else {
-                if (selected >= 2) {
-                    selected -= 2
-                }
+            } else if (selected >= 2) {
+                selected -= 2
             }
 
             drawMenu()
         })
 
-        // ----------------------------
         // 下
-        // ----------------------------
-
         controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
             if (!menuActive) {
                 return
@@ -114,19 +94,14 @@ namespace menuButtons {
 
             if (buttonCount == 2) {
                 selected = 1
-            } else {
-                if (selected < 2) {
-                    selected += 2
-                }
+            } else if (selected < 2) {
+                selected += 2
             }
 
             drawMenu()
         })
 
-        // ----------------------------
         // 左
-        // ----------------------------
-
         controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
             if (!menuActive || buttonCount != 4) {
                 return
@@ -139,10 +114,7 @@ namespace menuButtons {
             drawMenu()
         })
 
-        // ----------------------------
         // 右
-        // ----------------------------
-
         controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
             if (!menuActive || buttonCount != 4) {
                 return
@@ -155,19 +127,14 @@ namespace menuButtons {
             drawMenu()
         })
 
-        // ========================================
         // Bで決定
-        // ========================================
-
         controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
             if (!menuActive) {
                 return
             }
 
-            // メニューを無効化
             menuActive = false
 
-            // メニューを消す
             if (menuSprite) {
                 menuSprite.destroy()
                 menuSprite = null
@@ -175,7 +142,6 @@ namespace menuButtons {
 
             menuImage = null
 
-            // 選択したボタンの処理
             if (selected == 0 && action1) {
                 action1()
             } else if (selected == 1 && action2) {
@@ -189,7 +155,7 @@ namespace menuButtons {
     }
 
     // ========================================
-    // 2つのボタンを作る
+    // 2つのボタン
     // ========================================
 
     //% block="2つのボタンを作る %label1 %label2"
@@ -210,7 +176,6 @@ namespace menuButtons {
         }
 
         menuImage = image.create(160, 100)
-
         drawMenu()
 
         menuSprite = sprites.create(menuImage, MenuKind)
@@ -221,7 +186,7 @@ namespace menuButtons {
     }
 
     // ========================================
-    // 4つのボタンを作る
+    // 4つのボタン
     // ========================================
 
     //% block="4つのボタンを作る %label1 %label2 %label3 %label4"
@@ -246,7 +211,6 @@ namespace menuButtons {
         }
 
         menuImage = image.create(160, 100)
-
         drawMenu()
 
         menuSprite = sprites.create(menuImage, MenuKind)
@@ -363,7 +327,7 @@ namespace menuButtons {
     }
 
     // ========================================
-    // ハイスコアをとった数を0にする 1～4
+    // ハイスコアを0にする 1～4
     // ========================================
 
     //% block="1番のハイスコアをとった数を0にする"
