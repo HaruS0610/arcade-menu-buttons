@@ -1,7 +1,7 @@
 {
     "name": "arcade-menu-buttons",
     "description": "Two-button menu for MakeCode Arcade",
-    "version": "0.4.5",
+    "version": "0.5.0",
     "dependencies": {
         "device": "*"
     },
