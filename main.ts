@@ -22,14 +22,23 @@ namespace menuButtons {
     let highScoreCount3 = 0
     let highScoreCount4 = 0
 
-    // 各ボタンのハイスコア
+    // 各モードのハイスコア
     let highScore1 = 0
     let highScore2 = 0
     let highScore3 = 0
     let highScore4 = 0
 
-    // 前回確認したスコア
+    // 今プレイしているゲームの最高スコア
+    let playHighScore = 0
+
+    // 前回のスコア
     let lastScore = 0
+
+    // 今プレイしているモード
+    let playMode = 1
+
+    // 最初のゲームかどうか
+    let firstScoreCheck = true
 
     const MenuKind = SpriteKind.create()
 
@@ -83,7 +92,6 @@ namespace menuButtons {
 
         controlsStarted = true
 
-        // 上
         controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
             if (!menuActive) {
                 return
@@ -98,7 +106,6 @@ namespace menuButtons {
             drawMenu()
         })
 
-        // 下
         controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
             if (!menuActive) {
                 return
@@ -113,7 +120,6 @@ namespace menuButtons {
             drawMenu()
         })
 
-        // 左
         controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
             if (!menuActive || buttonCount != 4) {
                 return
@@ -126,7 +132,6 @@ namespace menuButtons {
             drawMenu()
         })
 
-        // 右
         controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
             if (!menuActive || buttonCount != 4) {
                 return
@@ -146,6 +151,14 @@ namespace menuButtons {
             }
 
             menuActive = false
+
+            // 選んだモードを次のプレイのモードとして保存
+            playMode = selected + 1
+
+            // 新しいプレイ開始
+            playHighScore = 0
+            lastScore = info.score()
+            firstScoreCheck = false
 
             if (menuSprite) {
                 menuSprite.destroy()
@@ -343,46 +356,45 @@ namespace menuButtons {
     }
 
     // ========================================
-    // スコアを監視して自動更新
+    // ゲーム中の最高スコアを記録
     // ========================================
 
     game.onUpdate(function () {
         let score = info.score()
 
-        // スコアが下がったら、新しいゲームが始まったと判断
-        if (score < lastScore) {
-            lastScore = score
-            return
+        // スコアが増えたら、そのプレイの最高スコアを記録
+        if (score > playHighScore) {
+            playHighScore = score
         }
 
-        // スコアが上がったときだけハイスコアを確認
-        if (score > lastScore) {
+        // スコアが下がった
+        // = クリア・リセットなどで次のプレイが始まった
+        if (!firstScoreCheck && score < lastScore) {
 
-            // ボタン1
-            if (selected == 0 && score > highScore1) {
-                highScore1 = score
+            // 前のプレイの最高スコアが
+            // 各モードのハイスコアを超えたか確認
+            if (playMode == 1 && playHighScore > highScore1) {
+                highScore1 = playHighScore
                 highScoreCount1 += 1
             }
-
-            // ボタン2
-            else if (selected == 1 && score > highScore2) {
-                highScore2 = score
+            else if (playMode == 2 && playHighScore > highScore2) {
+                highScore2 = playHighScore
                 highScoreCount2 += 1
             }
-
-            // ボタン3
-            else if (selected == 2 && score > highScore3) {
-                highScore3 = score
+            else if (playMode == 3 && playHighScore > highScore3) {
+                highScore3 = playHighScore
                 highScoreCount3 += 1
             }
-
-            // ボタン4
-            else if (selected == 3 && score > highScore4) {
-                highScore4 = score
+            else if (playMode == 4 && playHighScore > highScore4) {
+                highScore4 = playHighScore
                 highScoreCount4 += 1
             }
 
-            lastScore = score
+            // 新しいプレイ開始
+            playHighScore = score
         }
+
+        lastScore = score
+        firstScoreCheck = false
     })
 }
