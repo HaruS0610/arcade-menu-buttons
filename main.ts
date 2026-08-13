@@ -83,6 +83,7 @@ namespace menuButtons {
 
         controlsStarted = true
 
+        // 上
         controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
             if (!menuActive) {
                 return
@@ -97,6 +98,7 @@ namespace menuButtons {
             drawMenu()
         })
 
+        // 下
         controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
             if (!menuActive) {
                 return
@@ -111,6 +113,7 @@ namespace menuButtons {
             drawMenu()
         })
 
+        // 左
         controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
             if (!menuActive || buttonCount != 4) {
                 return
@@ -123,6 +126,7 @@ namespace menuButtons {
             drawMenu()
         })
 
+        // 右
         controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
             if (!menuActive || buttonCount != 4) {
                 return
@@ -345,17 +349,35 @@ namespace menuButtons {
     game.onUpdate(function () {
         let score = info.score()
 
+        // スコアが下がったら、新しいゲームが始まったと判断
+        if (score < lastScore) {
+            lastScore = score
+            return
+        }
+
+        // スコアが上がったときだけハイスコアを確認
         if (score > lastScore) {
+
+            // ボタン1
             if (selected == 0 && score > highScore1) {
                 highScore1 = score
                 highScoreCount1 += 1
-            } else if (selected == 1 && score > highScore2) {
+            }
+
+            // ボタン2
+            else if (selected == 1 && score > highScore2) {
                 highScore2 = score
                 highScoreCount2 += 1
-            } else if (selected == 2 && score > highScore3) {
+            }
+
+            // ボタン3
+            else if (selected == 2 && score > highScore3) {
                 highScore3 = score
                 highScoreCount3 += 1
-            } else if (selected == 3 && score > highScore4) {
+            }
+
+            // ボタン4
+            else if (selected == 3 && score > highScore4) {
                 highScore4 = score
                 highScoreCount4 += 1
             }
