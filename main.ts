@@ -22,17 +22,8 @@ namespace menuButtons {
     let highScore3 = 0
     let highScore4 = 0
 
-    // 今のプレイでの最高スコア
-    let playHighScore = 0
-
-    // 前回のスコア
-    let lastScore = 0
-
     // 今プレイしているモード
     let playMode = 1
-
-    // 最初の確認か
-    let firstScoreCheck = true
 
     const MenuKind = SpriteKind.create()
 
@@ -150,13 +141,8 @@ namespace menuButtons {
 
             menuActive = false
 
-            // 選んだモードを保存
+            // 選択した番号をモードとして保存
             playMode = selected + 1
-
-            // 新しいプレイ開始
-            playHighScore = info.score()
-            lastScore = info.score()
-            firstScoreCheck = false
 
             if (menuSprite) {
                 menuSprite.destroy()
@@ -303,7 +289,7 @@ namespace menuButtons {
 
     // ========================================
     // ハイスコアをとった数 1～4
-    // ※中身は「その番号のハイスコア」
+    // 実際の中身は各モードのハイスコア
     // ========================================
 
     //% block="ハイスコアをとった数 1"
@@ -327,7 +313,7 @@ namespace menuButtons {
     }
 
     // ========================================
-    // ハイスコアを0にする 1～4
+    // ハイスコアを0にする
     // ========================================
 
     //% block="1番のハイスコアをとった数を0にする"
@@ -351,45 +337,38 @@ namespace menuButtons {
     }
 
     // ========================================
-    // スコアを監視
+    // ★クリアしたときに呼ぶ
     // ========================================
 
-    game.onUpdate(function () {
+    //% block="ハイスコアを更新する"
+    export function updateHighScore() {
         let score = info.score()
 
-        // 今のプレイ中の最高スコアを記録
-        if (score > playHighScore) {
-            playHighScore = score
-        }
-
-        // スコアが下がった
-        // → クリア・リセットされたと判断
-        if (!firstScoreCheck && score < lastScore) {
-
-            // クリア時の最高スコアを保存
-            if (playMode == 1) {
-                if (playHighScore > highScore1) {
-                    highScore1 = playHighScore
-                }
-            } else if (playMode == 2) {
-                if (playHighScore > highScore2) {
-                    highScore2 = playHighScore
-                }
-            } else if (playMode == 3) {
-                if (playHighScore > highScore3) {
-                    highScore3 = playHighScore
-                }
-            } else if (playMode == 4) {
-                if (playHighScore > highScore4) {
-                    highScore4 = playHighScore
-                }
+        if (playMode == 1) {
+            if (score > highScore1) {
+                highScore1 = score
             }
-
-            // 次のプレイ用
-            playHighScore = score
+        } else if (playMode == 2) {
+            if (score > highScore2) {
+                highScore2 = score
+            }
+        } else if (playMode == 3) {
+            if (score > highScore3) {
+                highScore3 = score
+            }
+        } else if (playMode == 4) {
+            if (score > highScore4) {
+                highScore4 = score
+            }
         }
+    }
 
-        lastScore = score
-        firstScoreCheck = false
-    })
+    // ========================================
+    // 現在のモード
+    // ========================================
+
+    //% block="現在のモード"
+    export function currentMode(): number {
+        return playMode
+    }
 }
